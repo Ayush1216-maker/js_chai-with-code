@@ -1,0 +1,318 @@
+# Primitive and Non-Primitive Data Types in Java
+
+## 1. Primitive Data Types
+
+Primitive data types are the basic data types provided by Java.
+
+### Examples:
+
+* `byte`
+* `short`
+* `int`
+* `long`
+* `float`
+* `double`
+* `char`
+* `boolean`
+
+### Memory
+
+Primitive variables store their **actual value** directly.
+
+```java
+int a = 10;
+```
+
+Here, `a` contains the value `10`.
+
+When we assign one primitive variable to another:
+
+```java
+int a = 10;
+int b = a;
+```
+
+Java creates a **copy of the value**.
+
+So:
+
+```text
+a → 10
+b → 10
+```
+
+If we change `b`:
+
+```java
+b = 20;
+```
+
+The value of `a` remains unchanged:
+
+```text
+a → 10
+b → 20
+```
+
+### Important Point
+
+Primitive values are passed **by value**.
+
+That means a method receives a **copy of the value**, so changing the parameter does not change the original primitive variable.
+
+---
+
+## 2. Non-Primitive / Reference Types
+
+Non-primitive types are types that refer to objects or other data structures.
+
+### Examples:
+
+* Classes / Objects
+* Arrays
+* Strings
+* Interfaces
+* Enums
+
+Example:
+
+```java
+Student s1 = new Student();
+```
+
+The `Student` object is created in the **heap**, while `s1` contains a reference to that object.
+
+Conceptually:
+
+```text
+Stack                  Heap
+
+s1 ───────────────→   Student Object
+                     name = "Ayush"
+                     age = 21
+```
+
+If we assign:
+
+```java
+Student s2 = s1;
+```
+
+Java does **not** create a new Student object.
+
+Instead, the reference value is copied:
+
+```text
+Stack                  Heap
+
+s1 ───────────────┐
+                  ├──→ Student Object
+s2 ───────────────┘    name = "Ayush"
+                       age = 21
+```
+
+Therefore, `s1` and `s2` refer to the **same object**.
+
+If we do:
+
+```java
+s2.age = 25;
+```
+
+Then:
+
+```java
+System.out.println(s1.age);
+```
+
+will also print:
+
+```text
+25
+```
+
+because both `s1` and `s2` point to the same object.
+
+---
+
+# 3. Stack vs Heap
+
+### Stack Memory
+
+The stack is associated with method execution and stores things such as:
+
+* Local primitive variables
+* Method parameters
+* References to objects
+* Method call information
+
+Example:
+
+```java
+int x = 10;
+Student s = new Student();
+```
+
+Conceptually:
+
+```text
+Stack                  Heap
+
+x = 10
+
+s ─────────────────→  Student Object
+```
+
+### Heap Memory
+
+The heap is used for objects and arrays created dynamically using `new`.
+
+Example:
+
+```java
+Student s = new Student();
+```
+
+The `Student` object is stored in the heap.
+
+> Note: Saying "primitive types are always stored in the stack" is an oversimplification. A primitive can also be part of an object, in which case it is stored as part of that object in the heap. What matters is that the primitive variable stores its actual value, while a reference variable stores a reference to an object.
+
+---
+
+# 4. Pass-by-Value vs Objects in Java
+
+This is a very important interview concept.
+
+### Java is ALWAYS Pass-by-Value.
+
+Java does **not** have true pass-by-reference parameter passing.
+
+For primitives:
+
+```java
+static void change(int x) {
+    x = 100;
+}
+
+int a = 10;
+change(a);
+
+System.out.println(a);
+```
+
+Output:
+
+```text
+10
+```
+
+Because `x` receives a copy of `a`.
+
+---
+
+### With Objects
+
+Consider:
+
+```java
+static void change(Student s) {
+    s.age = 100;
+}
+
+Student s1 = new Student();
+s1.age = 20;
+
+change(s1);
+
+System.out.println(s1.age);
+```
+
+Output:
+
+```text
+100
+```
+
+Why?
+
+Because the **reference value is copied** into `s`.
+
+Conceptually:
+
+```text
+s1 ────────┐
+           ↓
+        Student Object
+        age = 20
+           ↑
+           │
+s  ────────┘
+```
+
+Both references point to the same object.
+
+So modifying the object's fields is visible through `s1`.
+
+### The correct terminology:
+
+❌ "Objects are passed by reference in Java."
+
+✅ "Java passes object references **by value**."
+
+---
+
+# 5. Important Difference
+
+| Primitive                                         | Non-Primitive / Reference                                                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------- |
+| Stores actual value                               | Reference variable stores a reference to an object                        |
+| Assignment copies the value                       | Assignment copies the reference                                           |
+| Usually discussed with stack/local storage        | Objects are generally stored in heap                                      |
+| Changes to copied primitive don't affect original | Changes to shared object's fields can be visible through other references |
+| Java passes the value                             | Java still passes the reference **by value**                              |
+
+---
+
+# 6. Easy Way to Remember
+
+### Primitive
+
+```text
+a = 10
+
+b = a
+
+a → 10
+b → 10
+
+b = 20
+
+a → 10
+b → 20
+```
+
+**Value is copied.**
+
+### Object
+
+```text
+s1 ──→ Object ←── s2
+```
+
+`Student s2 = s1;`
+
+**Reference is copied.**
+
+Both variables point to the same object.
+
+---
+
+## Golden Rule for Interviews
+
+> **Primitive → actual value is copied.**
+> **Object → reference value is copied.**
+> **Java is always pass-by-value.**
+
+The most important correction to remember is:
+
+> **Do not say "Java passes objects by reference." Say "Java passes the reference to the object by value."**
