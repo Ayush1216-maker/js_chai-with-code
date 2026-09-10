@@ -1,0 +1,13 @@
+primitive  
+7 types 
+String ,Boolean,number,null,undefined,Symbol,BigInt
+Symbol is used to make unique even if you pass same value
+
+Reference type or Non -primitive
+reference is directly given
+arrays,objects,functions
+
+
+JavaScript is a dynamically typed language. 
+This means that data types are determined 
+and checked at runtime 
